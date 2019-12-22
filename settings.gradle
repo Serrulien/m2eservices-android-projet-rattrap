@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name='Android-m2-eservices-projet-etu'

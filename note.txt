@@ -1,0 +1,36 @@
+====
+"https://pokeapi.co/api/v2/pokemon?offset=20&limit=20"
+
+{
+  "count": 964,
+  "next": "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20",
+  "previous": null,
+  "results": [
+    {
+      "name": "bulbasaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/1/"
+    },
+
+
+
+====
+https://pokeapi.co/api/v2/pokemon/1/
+
+abilities	[…]
+base_experience	64
+forms	[…]
+game_indices	[…]
+height	7
+held_items	[]
+id	1
+is_default	true
+location_area_encounters	"https://pokeapi.co/api/v2/pokemon/1/encounters"
+moves	[…]
+name	"bulbasaur"
+order	1
+species	{…}
+sprites	{…}
+stats	[…]
+types	[…]
+weight	69
+

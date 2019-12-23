@@ -1,12 +1,11 @@
 package m2.eservices.android.characters.api;
 
-import java.util.List;
-
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import m2.eservices.android.characters.api.model.Character;
 
 public interface CharacterDisplayRepository {
 
-    Observable<List<Character>> getCharacters();
+    Single<Character> getById(int charId);
+    Single<Integer> getCharacterCount();
 
 }

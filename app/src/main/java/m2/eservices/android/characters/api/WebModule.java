@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import m2.eservices.android.characters.service.CharacterService;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -19,7 +20,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class WebModule {
-    private static final String BASE_URL = "https://rickandmortyapi.com/api/";
+    String baseUrl;
+
+    public WebModule(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
     @Provides
     @Singleton
@@ -53,11 +58,17 @@ public class WebModule {
     @Singleton
     Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();
+    }
+
+    @Provides
+    @Singleton
+    public CharacterService provideCharacterService(Retrofit retrofit) {
+        return retrofit.create(CharacterService.class);
     }
 
 }

@@ -1,6 +1,8 @@
-package com.example.android_m2_eservices_projet_etu;
+package m2.eservices.android.characters.ui;
 
 import android.os.Bundle;
+
+import com.example.android_m2_eservices_projet_etu.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,10 +11,23 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import m2.eservices.android.characters.App;
+import m2.eservices.android.characters.api.CharacterDisplayDataRepository;
+import m2.eservices.android.characters.api.CharacterDisplayRepository;
+import retrofit2.Retrofit;
+
 public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    CharacterDisplayDataRepository test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ((App) getApplicationContext()).appComponent.inject(this);
+
         super.onCreate(savedInstanceState);
         setTitle(R.string.main_activity_title);
         setContentView(R.layout.activity_main);
@@ -27,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        System.out.println("=============");
+        System.out.println(test);
+        System.out.println("=============");
     }
 
     @Override

@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m2.eservices.android.characters.api.CharacterDisplayDataRepository;
@@ -23,7 +24,13 @@ public class CharacterListPresenter implements CharacterListContract.Presenter {
 
     @Override
     public int getItemCount() {
-        return this.repository.getCharacterCount().blockingGet();
+        return 300;
+        /*
+        // Ne marche pas :(
+        return this.repository.getCharacterCount()
+                .subscribeOn(Schedulers.io())
+                .blockingGet();
+         */
     }
 
     @Override

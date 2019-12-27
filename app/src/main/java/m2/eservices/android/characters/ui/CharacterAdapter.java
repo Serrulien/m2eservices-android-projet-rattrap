@@ -62,8 +62,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     @Override
     public int getItemCount() {
-        return 100;
-        //return this.presenter.getItemCount();
+        return this.presenter.getItemCount();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

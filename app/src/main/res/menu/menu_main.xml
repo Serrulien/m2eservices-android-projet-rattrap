@@ -3,11 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.android_m2_eservices_projet_etu.m2.eservices.android.RMCharacters.MainActivity" >
 
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_reset_favorites"
+    <item android:id="@+id/action_change_layout"
+        android:title="@string/action_change_layouts"
         android:orderInCategory="100"
         app:showAsAction="never" />
-
-
 
 </menu>

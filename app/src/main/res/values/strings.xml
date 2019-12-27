@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">serrurier-m2eservices</string>
-    <string name="action_reset_favorites">Supprimer mes favoris</string>
-    <string name="main_activity_title">Pokédex</string>
+    <string name="action_change_layouts">Changer la mise en page</string>
+    <string name="main_activity_title">R-M personnages</string>
 </resources>

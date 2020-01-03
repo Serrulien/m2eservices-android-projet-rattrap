@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
     private RecyclerView.LayoutManager layoutManager;
     private CharacterAdapter characterAdapter;
 
+    private static final String BUNDLE_LAYOUT_KEY = "layoutManager";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
        ((App) getApplicationContext()).getAppComponent().inject(this);
@@ -53,11 +55,42 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
 
         this.createRecyclerView();
 
+        if ( savedInstanceState != null ) {
+            this.layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(BUNDLE_LAYOUT_KEY));
+        }
+
         this.presenter = new CharacterListPresenter(this.repoCharacter);
         presenter.attachView(this);
 
         this.characterAdapter = new CharacterAdapter(presenter);
         recyclerView.setAdapter(this.characterAdapter);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putInt("position", this.getCurrentItemPosition());
+        outState.putParcelable(BUNDLE_LAYOUT_KEY, layoutManager.onSaveInstanceState());
+        super.onSaveInstanceState(outState);
+    }
+
+    private int getCurrentItemPosition() {
+        if (layoutManager instanceof GridLayoutManager) {
+            return ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+        } else {
+            throw new RuntimeException("layout not supported");
+        }
+    }
+
+    private void restoreItem(int position) {
+        if (layoutManager instanceof GridLayoutManager) {
+            layoutManager.scrollToPosition(position);
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            layoutManager.scrollToPosition(position);
+        } else {
+            throw new RuntimeException("layout not supported");
+        }
     }
 
     @Override
@@ -92,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
         } else {
             throw new RuntimeException("layout not supported");
         }
-        System.out.println(this.layoutManager);
         this.recyclerView.setLayoutManager(this.layoutManager);
     }
 

@@ -77,18 +77,9 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
         private TextView name_character;
         public ViewHolder(View view) {
             super(view);
-            this.img_character = (ImageView) view.findViewById(R.id.img_character);
-            this.name_character = (TextView) view.findViewById(R.id.name_character);
+            this.img_character = view.findViewById(R.id.img_character);
+            this.name_character = view.findViewById(R.id.name_character);
         }
     }
-
-//    @Override
-//    public void onNext(CharacterViewModel characterViewModel) {
-//        holder.name_character.setText(characterViewModel.getName());
-//        Glide.with(holder.itemView.getContext())
-//                .load(characterViewModel.getImgUrl())
-//                .centerCrop()
-//                .into(holder.img_character);
-//    }
 
 }

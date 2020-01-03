@@ -1,18 +1,12 @@
 package m2.eservices.android.characters.api;
 
-import java.util.List;
-
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
-import io.reactivex.SingleObserver;
 import io.reactivex.SingleOnSubscribe;
 import io.reactivex.functions.Function;
 import m2.eservices.android.characters.api.model.Character;
 import m2.eservices.android.characters.api.model.ResponseApi;
-import m2.eservices.android.characters.service.CharacterService;
 
 public class CharacterDisplayDataRepository implements CharacterDisplayRepository {
 
@@ -33,7 +27,7 @@ public class CharacterDisplayDataRepository implements CharacterDisplayRepositor
 
     @Override
     public Single<Integer> getCharacterCount() {
-        if ( this.characterCount != -1 ) {
+        if ( this.characterCount == -1 ) {
             return this.characterDisplayRemoteDataSource.getOnePageRow(0)
                 .map(
                     new Function<ResponseApi, Integer>() {

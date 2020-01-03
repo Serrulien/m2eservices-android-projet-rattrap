@@ -34,10 +34,12 @@ import retrofit2.Retrofit;
 public class MainActivity extends AppCompatActivity implements CharacterListContract.View {
 
     @Inject
-    CharacterDisplayDataRepository test;
+    CharacterDisplayDataRepository repoCharacter;
 
-    private boolean gridDisplayed = false;
     private CharacterListPresenter presenter;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private CharacterAdapter characterAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,41 +51,13 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.character_recycler_view);
-        this.setLinear(recyclerView);
+        this.createRecyclerView();
 
-        this.presenter = new CharacterListPresenter(this.test);
+        this.presenter = new CharacterListPresenter(this.repoCharacter);
         presenter.attachView(this);
 
-        CharacterAdapter adapter = new CharacterAdapter(presenter);
-        recyclerView.setAdapter(adapter);
-
-/*        Button button = (Button) findViewById(R.id.testButton);
-        button.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        test.getById(2).subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribeWith(new SingleObserver<Character>() {
-                                    @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onSuccess(Character character) {
-                                        System.out.println(character.getCreated());
-                                    }
-
-                                    @Override
-                                    public void onError(Throwable e) {
-
-                                    }
-                                });
-                    }
-                }
-        );*/
+        this.characterAdapter = new CharacterAdapter(presenter);
+        recyclerView.setAdapter(this.characterAdapter);
     }
 
     @Override
@@ -97,35 +71,29 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
         int id = item.getItemId();
 
         if (id == R.id.action_change_layout) {
-            swapLayout();
+            this.swapRecyclerViewLayout();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void swapLayout() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.character_recycler_view);
-        if (!gridDisplayed) {
-            setGrid(recyclerView);
+    private void createRecyclerView() {
+        this.recyclerView = findViewById(R.id.character_recycler_view);
+        this.layoutManager = new LinearLayoutManager(this);
+        this.recyclerView.setLayoutManager(layoutManager);
+    }
+
+    private void swapRecyclerViewLayout() {
+        if (layoutManager instanceof GridLayoutManager) {
+            this.layoutManager = new LinearLayoutManager(this);
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            this.layoutManager = new GridLayoutManager(this, 2);
         } else {
-            setLinear(recyclerView);
+            throw new RuntimeException("layout not supported");
         }
-        gridDisplayed = !gridDisplayed;
-    }
-
-    private void setLinear(RecyclerView recyclerView) {
-        LinearLayout ll = findViewById(R.id.inside_item_layout);
-        //ll.setOrientation(LinearLayout.HORIZONTAL);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-    }
-
-    private void setGrid(RecyclerView recyclerView) {
-        LinearLayout ll = findViewById(R.id.inside_item_layout);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(layoutManager);
+        System.out.println(this.layoutManager);
+        this.recyclerView.setLayoutManager(this.layoutManager);
     }
 
 }

@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.example.android_m2_eservices_projet_etu.R;
 
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.ViewHolder> {
@@ -35,27 +37,32 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(holder.itemView.getContext());
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
+        holder.img_character.setImageDrawable(circularProgressDrawable);
+
         this.presenter.getCharacter(position+1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(
-                        new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable throwable) throws Exception {
-                                System.out.println(throwable);
-                            }
-                        }
-                )
                 .subscribe(
-                        new Consumer<CharacterViewModel>() {
+                        new SingleObserver<CharacterViewModel>() {
                             @Override
-                            public void accept(CharacterViewModel characterViewModel) throws Exception {
+                            public void onSubscribe(Disposable d) { }
+
+                            @Override
+                            public void onSuccess(CharacterViewModel characterViewModel) {
                                 holder.name_character.setText(characterViewModel.getName());
+
                                 Glide.with(holder.itemView.getContext())
-                                        .load(characterViewModel.getImgUrl())
-                                        .centerCrop()
-                                        .into(holder.img_character);
+                                    .load(characterViewModel.getImgUrl())
+                                    .centerCrop()
+                                    .into(holder.img_character);
                             }
+
+                            @Override
+                            public void onError(Throwable e) { }
                         }
                 );
     }
@@ -74,5 +81,14 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.View
             this.name_character = (TextView) view.findViewById(R.id.name_character);
         }
     }
+
+//    @Override
+//    public void onNext(CharacterViewModel characterViewModel) {
+//        holder.name_character.setText(characterViewModel.getName());
+//        Glide.with(holder.itemView.getContext())
+//                .load(characterViewModel.getImgUrl())
+//                .centerCrop()
+//                .into(holder.img_character);
+//    }
 
 }

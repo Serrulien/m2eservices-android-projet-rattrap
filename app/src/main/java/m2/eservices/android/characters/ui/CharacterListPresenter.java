@@ -1,12 +1,8 @@
 package m2.eservices.android.characters.ui;
 
-import android.view.View;
 
 import javax.inject.Inject;
-
-import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import m2.eservices.android.characters.api.CharacterDisplayDataRepository;
@@ -22,15 +18,20 @@ public class CharacterListPresenter implements CharacterListContract.Presenter {
         this.repository = repository;
     }
 
+    /**
+     * If an error happen when trying to get ItemCount (e.g. java.net.UnknownHostException),
+     * it will return 1.
+     */
     @Override
     public int getItemCount() {
-        return 300;
-        /*
-        // Ne marche pas :(
-        return this.repository.getCharacterCount()
+        try {
+            return this.repository.getCharacterCount()
                 .subscribeOn(Schedulers.io())
                 .blockingGet();
-         */
+        } catch (RuntimeException err) {
+            System.out.println(err);
+            return 1;
+        }
     }
 
     @Override

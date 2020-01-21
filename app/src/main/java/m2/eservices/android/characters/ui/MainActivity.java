@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
     private CharacterAdapter characterAdapter;
 
     private static final String BUNDLE_LAYOUT_KEY = "layoutManager";
+    private static final String BUNDLE_LAYOUT_TYPE_KEY = "layoutManagerType";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +54,11 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        this.createRecyclerView();
-
         if ( savedInstanceState != null ) {
+            this.createRecyclerView(savedInstanceState.getInt(BUNDLE_LAYOUT_TYPE_KEY));
             this.layoutManager.onRestoreInstanceState(savedInstanceState.getParcelable(BUNDLE_LAYOUT_KEY));
+        } else {
+            this.createRecyclerView(0);
         }
 
         this.presenter = new CharacterListPresenter(this.repoCharacter);
@@ -68,28 +70,24 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt("position", this.getCurrentItemPosition());
         outState.putParcelable(BUNDLE_LAYOUT_KEY, layoutManager.onSaveInstanceState());
+        outState.putInt(BUNDLE_LAYOUT_TYPE_KEY, this.layoutToId(this.layoutManager));
         super.onSaveInstanceState(outState);
     }
 
-    private int getCurrentItemPosition() {
+    private int layoutToId(RecyclerView.LayoutManager layout) {
         if (layoutManager instanceof GridLayoutManager) {
-            return ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
-        } else if (layoutManager instanceof LinearLayoutManager) {
-            return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            return 0;
         } else {
-            throw new RuntimeException("layout not supported");
+            return 1;
         }
     }
 
-    private void restoreItem(int position) {
-        if (layoutManager instanceof GridLayoutManager) {
-            layoutManager.scrollToPosition(position);
-        } else if (layoutManager instanceof LinearLayoutManager) {
-            layoutManager.scrollToPosition(position);
+    private RecyclerView.LayoutManager idToLayout(int id) {
+        if (id == 0) {
+            return new LinearLayoutManager(this);
         } else {
-            throw new RuntimeException("layout not supported");
+            return new GridLayoutManager(this, 2);
         }
     }
 
@@ -111,13 +109,15 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
         return super.onOptionsItemSelected(item);
     }
 
-    private void createRecyclerView() {
+    private void createRecyclerView(int id) {
         this.recyclerView = findViewById(R.id.character_recycler_view);
-        this.layoutManager = new LinearLayoutManager(this);
+        this.layoutManager = this.idToLayout(id);
         this.recyclerView.setLayoutManager(layoutManager);
     }
 
     private void swapRecyclerViewLayout() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("save", this.layoutManager.onSaveInstanceState());
         if (layoutManager instanceof GridLayoutManager) {
             this.layoutManager = new LinearLayoutManager(this);
         } else if (layoutManager instanceof LinearLayoutManager) {
@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
         } else {
             throw new RuntimeException("layout not supported");
         }
+        this.layoutManager.onRestoreInstanceState(bundle.getParcelable("save"));
         this.recyclerView.setLayoutManager(this.layoutManager);
     }
 

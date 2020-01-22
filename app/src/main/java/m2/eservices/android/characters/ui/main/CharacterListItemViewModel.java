@@ -1,11 +1,11 @@
-package m2.eservices.android.characters.ui;
+package m2.eservices.android.characters.ui.main;
 
-public class CharacterViewModel {
+public class CharacterListItemViewModel {
     private String name;
     private int id;
     private String imgUrl;
 
-    public CharacterViewModel(String name, int id, String imgUrl) {
+    public CharacterListItemViewModel(String name, int id, String imgUrl) {
         this.name = name;
         this.id = id;
         this.imgUrl = imgUrl;

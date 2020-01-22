@@ -1,0 +1,102 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="m2.eservices.android.characters.ui.ui.character.CharacterInfoFragment">
+
+    <ImageView
+        android:id="@+id/img_character"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name_character"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:textColor="@color/black"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_character" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:textColor="@color/black"
+                android:id="@+id/status_character"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="left"
+                android:textSize="25sp"
+                app:layout_constraintRight_toRightOf="@+id/gender_character"
+                app:layout_constraintTop_toBottomOf="@+id/name_character" />
+
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:id="@+id/gender_character"
+                android:layout_width="wrap_content"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="25sp"
+                app:layout_constraintLeft_toLeftOf="@+id/status_character"
+                app:layout_constraintTop_toBottomOf="@+id/name_character" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <TextView
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:layout_marginRight="5sp"
+                android:gravity="right"
+                android:layout_gravity="right"
+                android:text="@string/origin_character_placeholder"
+                app:layout_constraintRight_toRightOf="@+id/gender_character"
+                app:layout_constraintTop_toBottomOf="@+id/name_character" />
+
+            <TextView
+                android:id="@+id/origin_character"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="25sp"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</ScrollView>

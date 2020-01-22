@@ -1,35 +1,22 @@
-package m2.eservices.android.characters.ui;
+package m2.eservices.android.characters.ui.main;
 
 import android.os.Bundle;
 
 import com.example.android_m2_eservices_projet_etu.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.LinearLayout;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
-import io.reactivex.Scheduler;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import m2.eservices.android.characters.App;
 import m2.eservices.android.characters.api.CharacterDisplayDataRepository;
-import m2.eservices.android.characters.api.CharacterDisplayRepository;
-import m2.eservices.android.characters.api.model.Character;
-import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements CharacterListContract.View {
 
@@ -64,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
         this.presenter = new CharacterListPresenter(this.repoCharacter);
         presenter.attachView(this);
 
-        this.characterAdapter = new CharacterAdapter(presenter);
+        this.characterAdapter = new CharacterAdapter(this, presenter);
         recyclerView.setAdapter(this.characterAdapter);
     }
 

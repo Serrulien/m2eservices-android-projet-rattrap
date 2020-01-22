@@ -1,7 +1,6 @@
-package m2.eservices.android.characters.ui;
+package m2.eservices.android.characters.ui.main;
 
 import io.reactivex.Single;
-import m2.eservices.android.characters.api.model.Character;
 
 public interface CharacterListContract {
 
@@ -12,7 +11,7 @@ public interface CharacterListContract {
     interface Presenter {
         void attachView(View view);
         void detachView(View view);
-        Single<CharacterViewModel> getCharacter(int id);
+        Single<CharacterListItemViewModel> getCharacter(int id);
         int getItemCount();
     }
 

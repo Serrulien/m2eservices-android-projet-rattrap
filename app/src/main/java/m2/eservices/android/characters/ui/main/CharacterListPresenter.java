@@ -1,5 +1,4 @@
-package m2.eservices.android.characters.ui;
-
+package m2.eservices.android.characters.ui.main;
 
 import javax.inject.Inject;
 import io.reactivex.Single;
@@ -45,12 +44,12 @@ public class CharacterListPresenter implements CharacterListContract.Presenter {
     }
 
     @Override
-    public Single<CharacterViewModel> getCharacter(int id) {
+    public Single<CharacterListItemViewModel> getCharacter(int id) {
         return this.repository.getById(id).map(
-                new Function<Character, CharacterViewModel>() {
+                new Function<Character, CharacterListItemViewModel>() {
                     @Override
-                    public CharacterViewModel apply(Character character) throws Exception {
-                        return CharacterMapper.map(character);
+                    public CharacterListItemViewModel apply(Character character) throws Exception {
+                        return CharacterToCharacterListItemMapper.map(character);
                     }
                 }
         );

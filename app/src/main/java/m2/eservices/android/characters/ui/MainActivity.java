@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity implements CharacterListCont
 
     private int layoutToId(RecyclerView.LayoutManager layout) {
         if (layoutManager instanceof GridLayoutManager) {
-            return 0;
-        } else {
             return 1;
+        } else {
+            return 0;
         }
     }
 

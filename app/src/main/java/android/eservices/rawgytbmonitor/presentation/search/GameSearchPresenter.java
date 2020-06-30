@@ -1,8 +1,9 @@
 package android.eservices.rawgytbmonitor.presentation.search;
 
-import android.eservices.rawgytbmonitor.data.api.model.BookSearchResponse;
-import android.eservices.rawgytbmonitor.data.repository.bookdisplay.BookDisplayRepository;
-import android.eservices.rawgytbmonitor.presentation.search.mapper.BookToViewModelMapper;
+import android.eservices.rawgytbmonitor.data.api.model.Game;
+import android.eservices.rawgytbmonitor.data.api.model.PaginatedResponse;
+import android.eservices.rawgytbmonitor.data.repository.bookdisplay.GameDisplayRepository;
+import android.eservices.rawgytbmonitor.presentation.search.mapper.GameToViewModelMapper;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -10,36 +11,38 @@ import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableSingleObserver;
 import io.reactivex.schedulers.Schedulers;
 
-public class BookSearchPresenter implements BookSearchContract.Presenter {
+public class GameSearchPresenter implements GameSearchContract.Presenter {
 
-    private BookDisplayRepository bookDisplayRepository;
-    private BookSearchContract.View view;
+    private GameDisplayRepository gameDisplayRepository;
+    private GameSearchContract.View view;
     private CompositeDisposable compositeDisposable;
-    private BookToViewModelMapper bookToViewModelMapper;
+    private GameToViewModelMapper gameToViewModelMapper;
 
-    public BookSearchPresenter(BookDisplayRepository bookDisplayRepository, BookToViewModelMapper bookToViewModelMapper) {
-        this.bookDisplayRepository = bookDisplayRepository;
+    public GameSearchPresenter(GameDisplayRepository gameDisplayRepository, GameToViewModelMapper gameToViewModelMapper) {
+        this.gameDisplayRepository = gameDisplayRepository;
         this.compositeDisposable = new CompositeDisposable();
-        this.bookToViewModelMapper = bookToViewModelMapper;
+        this.gameToViewModelMapper = gameToViewModelMapper;
     }
 
     @Override
-    public void searchBooks(String keywords) {
+    public void search(String keywords) {
         compositeDisposable.clear();
-        compositeDisposable.add(bookDisplayRepository.getBookSearchResponse(keywords)
+        compositeDisposable.add(gameDisplayRepository.getSearchResponse(keywords)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new DisposableSingleObserver<BookSearchResponse>() {
+                .subscribeWith(new DisposableSingleObserver<PaginatedResponse<Game>>() {
 
                     @Override
-                    public void onSuccess(BookSearchResponse bookSearchResponse) {
+                    public void onSuccess(PaginatedResponse<Game> searchResponse) {
                         // work with the resulting todos
-                        view.displayBooks(bookToViewModelMapper.map(bookSearchResponse.getBookList()));
+                        System.out.print("KKKKKKKKKKKKKKK");
+                        System.out.print(searchResponse.getResults().size());
+                        view.display(gameToViewModelMapper.map(searchResponse.getResults()));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        // handle the error case
+                        // handle the error case todos
                         System.out.println(e.toString());
                     }
                 }));
@@ -47,14 +50,14 @@ public class BookSearchPresenter implements BookSearchContract.Presenter {
     }
 
     @Override
-    public void addBookToFavorite(String bookId) {
-        compositeDisposable.add(bookDisplayRepository.addBookToFavorites(bookId)
+    public void addToFavorite(int gameId) {
+        compositeDisposable.add(gameDisplayRepository.addToFavorites(gameId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        view.onBookAddedToFavorites();
+                        view.onAddedToFavorites();
                     }
 
                     @Override
@@ -65,14 +68,14 @@ public class BookSearchPresenter implements BookSearchContract.Presenter {
     }
 
     @Override
-    public void removeBookFromFavorites(String bookId) {
-        compositeDisposable.add(bookDisplayRepository.removeBookFromFavorites(bookId)
+    public void removeFromFavorites(int gameId) {
+        compositeDisposable.add(gameDisplayRepository.removeFromFavorites(gameId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        view.onBookRemovedFromFavorites();
+                        view.onRemovedFromFavorites();
                     }
 
                     @Override
@@ -83,7 +86,7 @@ public class BookSearchPresenter implements BookSearchContract.Presenter {
     }
 
     @Override
-    public void attachView(BookSearchContract.View view) {
+    public void attachView(GameSearchContract.View view) {
         this.view = view;
     }
 

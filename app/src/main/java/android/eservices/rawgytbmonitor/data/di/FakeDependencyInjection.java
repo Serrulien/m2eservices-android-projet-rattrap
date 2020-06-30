@@ -1,13 +1,13 @@
 package android.eservices.rawgytbmonitor.data.di;
 
 import android.content.Context;
-import android.eservices.rawgytbmonitor.data.api.BookDisplayService;
-import android.eservices.rawgytbmonitor.data.db.BookDatabase;
-import android.eservices.rawgytbmonitor.data.repository.bookdisplay.BookDisplayDataRepository;
-import android.eservices.rawgytbmonitor.data.repository.bookdisplay.BookDisplayRepository;
-import android.eservices.rawgytbmonitor.data.repository.bookdisplay.local.BookDisplayLocalDataSource;
-import android.eservices.rawgytbmonitor.data.repository.bookdisplay.mapper.BookToBookEntityMapper;
-import android.eservices.rawgytbmonitor.data.repository.bookdisplay.remote.BookDisplayRemoteDataSource;
+import android.eservices.rawgytbmonitor.data.api.GameDisplayService;
+import android.eservices.rawgytbmonitor.data.db.GameDatabase;
+import android.eservices.rawgytbmonitor.data.repository.bookdisplay.GameDisplayDataRepository;
+import android.eservices.rawgytbmonitor.data.repository.bookdisplay.GameDisplayRepository;
+import android.eservices.rawgytbmonitor.data.repository.bookdisplay.local.GameDisplayLocalDataSource;
+import android.eservices.rawgytbmonitor.data.repository.bookdisplay.mapper.GameToGameEntityMapper;
+import android.eservices.rawgytbmonitor.data.repository.bookdisplay.remote.gameDisplayRemoteDataSource;
 
 import androidx.room.Room;
 
@@ -30,29 +30,29 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FakeDependencyInjection {
 
-    private static BookDisplayService bookDisplayService;
+    private static GameDisplayService gameDisplayService;
     private static Retrofit retrofit;
     private static Gson gson;
-    private static BookDisplayRepository bookDisplayRepository;
-    private static BookDatabase bookDatabase;
+    private static GameDisplayRepository gameDisplayRepository;
+    private static GameDatabase gameDatabase;
     private static Context applicationContext;
 
-    public static BookDisplayRepository getBookDisplayRepository() {
-        if (bookDisplayRepository == null) {
-            bookDisplayRepository = new BookDisplayDataRepository(
-                    new BookDisplayLocalDataSource(getBookDatabase()),
-                    new BookDisplayRemoteDataSource(getBookDisplayService()),
-                    new BookToBookEntityMapper()
+    public static GameDisplayRepository getGameDisplayRepository() {
+        if (gameDisplayRepository == null) {
+            gameDisplayRepository = new GameDisplayDataRepository(
+                    new GameDisplayLocalDataSource(getGameDatabase()),
+                    new gameDisplayRemoteDataSource(getGameDisplayService()),
+                    new GameToGameEntityMapper()
             );
         }
-        return bookDisplayRepository;
+        return gameDisplayRepository;
     }
 
-    public static BookDisplayService getBookDisplayService() {
-        if (bookDisplayService == null) {
-            bookDisplayService = getRetrofit().create(BookDisplayService.class);
+    public static GameDisplayService getGameDisplayService() {
+        if (gameDisplayService == null) {
+            gameDisplayService = getRetrofit().create(GameDisplayService.class);
         }
-        return bookDisplayService;
+        return gameDisplayService;
     }
 
     public static Retrofit getRetrofit() {
@@ -65,7 +65,7 @@ public class FakeDependencyInjection {
                     .build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://www.googleapis.com/books/v1/")
+                    .baseUrl("https://api.rawg.io/api/")
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create(getGson()))
@@ -85,11 +85,11 @@ public class FakeDependencyInjection {
         applicationContext = context;
     }
 
-    public static BookDatabase getBookDatabase() {
-        if (bookDatabase == null) {
-            bookDatabase = Room.databaseBuilder(applicationContext,
-                    BookDatabase.class, "book-database").build();
+    public static GameDatabase getGameDatabase() {
+        if (gameDatabase == null) {
+            gameDatabase = Room.databaseBuilder(applicationContext,
+                    GameDatabase.class, "book-database").build();
         }
-        return bookDatabase;
+        return gameDatabase;
     }
 }

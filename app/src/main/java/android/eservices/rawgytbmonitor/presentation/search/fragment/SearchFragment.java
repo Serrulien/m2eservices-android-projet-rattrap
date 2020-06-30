@@ -2,12 +2,12 @@ package android.eservices.rawgytbmonitor.presentation.search.fragment;
 
 import android.eservices.rawgytbmonitor.R;
 import android.eservices.rawgytbmonitor.data.di.FakeDependencyInjection;
-import android.eservices.rawgytbmonitor.presentation.search.BookSearchContract;
-import android.eservices.rawgytbmonitor.presentation.search.BookSearchPresenter;
-import android.eservices.rawgytbmonitor.presentation.search.adapter.BookActionInterface;
-import android.eservices.rawgytbmonitor.presentation.search.adapter.BookAdapter;
-import android.eservices.rawgytbmonitor.presentation.search.adapter.BookItemViewModel;
-import android.eservices.rawgytbmonitor.presentation.search.mapper.BookToViewModelMapper;
+import android.eservices.rawgytbmonitor.presentation.search.GameSearchContract;
+import android.eservices.rawgytbmonitor.presentation.search.GameSearchPresenter;
+import android.eservices.rawgytbmonitor.presentation.search.adapter.GameActionInterface;
+import android.eservices.rawgytbmonitor.presentation.search.adapter.GameAdapter;
+import android.eservices.rawgytbmonitor.presentation.search.adapter.GameItemViewModel;
+import android.eservices.rawgytbmonitor.presentation.search.mapper.GameToViewModelMapper;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,14 +29,13 @@ import java.util.TimerTask;
 /*
  * TODO : uncheck favorite selection in search results when favorite unchecked from Favorite fragment
  */
-public class SearchFragment extends Fragment implements BookSearchContract.View, BookActionInterface {
+public class SearchFragment extends Fragment implements GameSearchContract.View, GameActionInterface {
 
-    public static final String TAB_NAME = "Search";
     private View rootView;
-    BookSearchContract.Presenter bookSearchPresenter;
+    GameSearchContract.Presenter searchPresenter;
     private SearchView searchView;
     private RecyclerView recyclerView;
-    private BookAdapter bookAdapter;
+    private GameAdapter gameAdapter;
     private ProgressBar progressBar;
 
     private SearchFragment() {
@@ -61,8 +60,8 @@ public class SearchFragment extends Fragment implements BookSearchContract.View,
         setupRecyclerView();
         progressBar = rootView.findViewById(R.id.progress_bar);
 
-        bookSearchPresenter = new BookSearchPresenter(FakeDependencyInjection.getBookDisplayRepository(), new BookToViewModelMapper());
-        bookSearchPresenter.attachView(this);
+        searchPresenter = new GameSearchPresenter(FakeDependencyInjection.getGameDisplayRepository(), new GameToViewModelMapper());
+        searchPresenter.attachView(this);
     }
 
     private void setupSearchView() {
@@ -78,12 +77,13 @@ public class SearchFragment extends Fragment implements BookSearchContract.View,
             @Override
             public boolean onQueryTextChange(final String s) {
                 if (s.length() == 0) {
-                    bookSearchPresenter.cancelSubscription();
+                    searchPresenter.cancelSubscription();
                     progressBar.setVisibility(View.GONE);
                 } else {
                     progressBar.setVisibility(View.VISIBLE);
                     timer.cancel();
                     timer = new Timer();
+                    // todos pour debug
                     int sleep = 350;
                     if (s.length() == 1)
                         sleep = 5000;
@@ -94,7 +94,7 @@ public class SearchFragment extends Fragment implements BookSearchContract.View,
                     timer.schedule(new TimerTask() {
                         @Override
                         public void run() {
-                            bookSearchPresenter.searchBooks(s);
+                            searchPresenter.search(s);
                         }
                     }, sleep);
                 }
@@ -105,39 +105,39 @@ public class SearchFragment extends Fragment implements BookSearchContract.View,
 
     private void setupRecyclerView() {
         recyclerView = rootView.findViewById(R.id.recycler_view);
-        bookAdapter = new BookAdapter(this);
-        recyclerView.setAdapter(bookAdapter);
+        gameAdapter = new GameAdapter(this);
+        recyclerView.setAdapter(gameAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
-    public void displayBooks(List<BookItemViewModel> bookItemViewModelList) {
+    public void display(List<GameItemViewModel> gameItemViewModelList) {
         progressBar.setVisibility(View.GONE);
-        bookAdapter.bindViewModels(bookItemViewModelList);
+        gameAdapter.bindViewModels(gameItemViewModelList);
     }
 
     @Override
-    public void onFavoriteToggle(String bookId, boolean isFavorite) {
+    public void onFavoriteToggle(int gameId, boolean isFavorite) {
         if (isFavorite) {
-            bookSearchPresenter.addBookToFavorite(bookId);
+            searchPresenter.addToFavorite(gameId);
         } else {
-            bookSearchPresenter.removeBookFromFavorites(bookId);
+            searchPresenter.removeFromFavorites(gameId);
         }
     }
 
     @Override
-    public void onBookAddedToFavorites() {
+    public void onAddedToFavorites() {
         //Do nothing
     }
 
     @Override
-    public void onBookRemovedFromFavorites() {
+    public void onRemovedFromFavorites() {
         //Do nothing
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        bookSearchPresenter.detachView();
+        searchPresenter.detachView();
     }
 }

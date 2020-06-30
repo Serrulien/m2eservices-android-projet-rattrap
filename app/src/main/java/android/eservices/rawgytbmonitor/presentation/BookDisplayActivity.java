@@ -34,19 +34,19 @@ public class BookDisplayActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.tab_viewpager);
         tabLayout = findViewById(R.id.tablayout);
 
+        final FavoriteFragment youtubeFragment = FavoriteFragment.newInstance();
         final SearchFragment searchFragment = SearchFragment.newInstance();
-        final FavoriteFragment fragmentTwo = FavoriteFragment.newInstance();
-        final FavoriteFragment fragmentThree = FavoriteFragment.newInstance();
+        final FavoriteFragment favoriteFragment = FavoriteFragment.newInstance();
 
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 if (position == 0) {
-                    return searchFragment;
+                    return youtubeFragment;
                 } else if (position == 1) {
-                    return fragmentTwo;
+                    return favoriteFragment;
                 }
-                return fragmentThree;
+                return searchFragment;
             }
 
             @Override
